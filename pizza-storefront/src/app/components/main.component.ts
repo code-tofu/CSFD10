@@ -89,7 +89,7 @@ export class MainComponent {
     firstValueFrom(this.pizzaSvc.placeOrder(newOrder))
       .then((resp) => {
         console.log(resp);
-        alert('Order Successful' + JSON.stringify(resp));
+        alert('Order Successful: ' + JSON.stringify(resp));
         this.orderForm.reset();
         this.router.navigate(['/orders', newOrder.email]);
       })

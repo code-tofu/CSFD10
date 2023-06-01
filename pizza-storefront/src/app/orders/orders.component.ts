@@ -4,6 +4,21 @@ import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PendingOrder } from '../order.model';
 
+const months: String[] = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -46,5 +61,9 @@ export class OrdersComponent implements OnInit {
         console.log(err);
         alert('Order ' + e.target.value + ' Not Found');
       });
+  }
+
+  getMonths(month: number) {
+    return months[month - 1];
   }
 }
