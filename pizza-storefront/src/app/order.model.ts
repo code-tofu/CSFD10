@@ -7,3 +7,8 @@ export interface Order {
   toppings: string[];
   comments: string;
 }
+export interface PendingOrder {
+  date: Date;
+  orderId: string;
+  total: number;
+}

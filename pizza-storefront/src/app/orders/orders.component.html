@@ -1,2 +1,11 @@
-<h1>YOU ARE AWESOME!!!</h1>
-<h2>{{email}}</h2>
+<h2>Orders for {{email}}</h2>
+
+<div *ngFor="let order of orders;let i=index">
+    <div>
+        <p>{{order.date.getMonth()}} {{order.date.getDate()}},{{order.date.getFullYear()}}</p>
+        <p>{{order.orderId}} <button type="submit">Delivered</button></p>
+        <p>{{order.total}}</p>
+    </div>
+</div>
+
+<button type="submit" [routerLink]="['/']">Back to Ordering</button>
