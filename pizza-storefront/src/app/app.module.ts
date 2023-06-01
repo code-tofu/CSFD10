@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { OrdersComponent } from './orders/orders.component';
+import { PizzaService } from './pizza.service';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
@@ -19,7 +20,7 @@ const routes: Routes = [
   declarations: [AppComponent, MainComponent, OrdersComponent],
   imports: [BrowserModule, ReactiveFormsModule, RouterModule, HttpClientModule],
 
-  providers: [],
+  providers: [PizzaService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

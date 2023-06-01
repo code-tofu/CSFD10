@@ -1,6 +1,7 @@
 package ibf2022.batch3.assessment.csf.orderbackend.respositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,14 +14,14 @@ import jakarta.json.JsonObject;
 public class PendingOrdersRepository {
 
     @Autowired
-    AppConfig appConfig;
-    RedisTemplate<String, String> redisTemplate = appConfig.createRedisTemplate();
+    @Qualifier("pending-orders")
+    RedisTemplate<String, String> redisTemplate;
 
     // TODO: Task 3
     // WARNING: Do not change the method's signature.
     public void add(PizzaOrder order) {
-        String pendingORderJsonStr = getPOJsonStr(order);
-        this.redisTemplate.opsForValue().set(order.getOrderId(), pendingORderJsonStr);
+        String pendingOrderJsonStr = parsePO(order);
+        this.redisTemplate.opsForValue().set(order.getOrderId(), pendingOrderJsonStr);
     }
 
     // TODO: Task 7
@@ -29,7 +30,7 @@ public class PendingOrdersRepository {
         return false;
     }
 
-    public String getPOJsonStr(PizzaOrder order) {
+    public String parsePO(PizzaOrder order) {
         JsonObject pendingOrderJson = Json.createObjectBuilder()
                 .add("orderId", order.getOrderId())
                 .add("date", order.getDate().toString())

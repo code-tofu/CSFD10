@@ -11,7 +11,7 @@ export class PizzaService {
   http = inject(HttpClient);
   placeOrder(order: Order) {
     console.info('Posting', order);
-    return this.http.post<any>(uploadAPIURL + 'order', JSON.stringify(order));
+    return this.http.post<any>(uploadAPIURL + 'order', order);
   }
 
   // TODO: Task 5

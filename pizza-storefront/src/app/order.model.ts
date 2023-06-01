@@ -2,8 +2,8 @@ export interface Order {
   name: string;
   email: string;
   size: string;
-  base: string;
+  crust: string;
   sauce: string;
-  toppings: string;
+  toppings: string[];
   comments: string;
 }

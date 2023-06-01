@@ -34,6 +34,7 @@ export class MainComponent {
   pizzaSvc = inject(PizzaService);
 
   orderForm!: FormGroup;
+  toppings!: FormGroup;
 
   ngOnInit(): void {
     this.orderForm = this.createForm();
@@ -49,9 +50,20 @@ export class MainComponent {
       size: this.fb.control<number>(0, [Validators.required]),
       base: this.fb.control<string>('', [Validators.required]),
       sauce: this.fb.control<string>('', [Validators.required]),
-      toppings: this.fb.control<string>('', [Validators.required]),
       comments: this.fb.control<string>(''),
-      //TODO: Change toppings value to value instead of boolean
+      toppings: this.createToppings(), //default no selection
+    });
+  }
+
+  createToppings(): FormGroup {
+    return this.fb.group({
+      chicken: this.fb.control<boolean>(false),
+      seafood: this.fb.control<boolean>(false),
+      beef: this.fb.control<boolean>(false),
+      vegetables: this.fb.control<boolean>(false),
+      cheese: this.fb.control<boolean>(false),
+      arugula: this.fb.control<boolean>(false),
+      pineapple: this.fb.control<boolean>(false),
     });
   }
 
@@ -60,8 +72,18 @@ export class MainComponent {
   }
 
   order() {
-    console.info('OrderForm:', this.orderForm.value);
-    firstValueFrom(this.pizzaSvc.placeOrder(this.orderForm.value as Order))
+    // console.info('OrderForm:', this.orderForm.value);
+    let newOrder: Order = {
+      name: this.orderForm.value.name,
+      email: this.orderForm.value.email,
+      sauce: this.orderForm.value.sauce,
+      size: this.orderForm.value.size,
+      comments: this.orderForm.value.comments,
+      toppings: this.parseToppings(this.orderForm.value.toppings),
+      crust: this.orderForm.value.base,
+    };
+    // console.info('NewOrder:', newOrder);
+    firstValueFrom(this.pizzaSvc.placeOrder(newOrder))
       .then((resp) => {
         console.log(resp);
         alert('Order Successful');
@@ -73,7 +95,16 @@ export class MainComponent {
         alert('Order Failed:' + err);
       });
   }
-}
-function then(arg0: (resp: any) => void) {
-  throw new Error('Function not implemented.');
+
+  parseToppings(toppingsObj: any): string[] {
+    let toppingsArr: string[] = [];
+    let toppings = Object.keys(toppingsObj);
+    for (let i = 0; i < toppings.length; i++) {
+      if (toppingsObj[toppings[i]]) {
+        toppingsArr.push(toppings[i]);
+      }
+    }
+    console.info(toppingsArr);
+    return toppingsArr;
+  }
 }
