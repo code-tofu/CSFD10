@@ -15,8 +15,12 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.connection.zset.Aggregate;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.result.UpdateResult;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
 import redis.clients.jedis.search.aggr.AggregationResult;
@@ -98,8 +102,16 @@ public class OrdersRepository {
     // WARNING: Do not change the method's signature.
     // Write the native MongoDB query in the comment below
     // Native MongoDB query here for markOrderDelivered()
+    // db.orders.updateOne({_id:"4e483fa59a"},{$set:{delivered:true}});
     public boolean markOrderDelivered(String orderId) {
-
+        Query query = Query.query(Criteria.where("_id").is(orderId));
+        Update updateField = new Update().set("delivered", true);
+        UpdateResult result = mongoTemplate.updateFirst(query, updateField, Document.class, "orders");
+        if (result != null) {
+            System.out.println(">>Mongo Delivered");
+            return true;
+        }
+        System.out.println(">>Mongo Not Found");
         return false;
     }
 

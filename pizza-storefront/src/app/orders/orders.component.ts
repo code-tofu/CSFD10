@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PizzaService } from '../pizza.service';
 import { firstValueFrom } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PendingOrder } from '../order.model';
 
 @Component({
@@ -12,6 +12,7 @@ import { PendingOrder } from '../order.model';
 export class OrdersComponent implements OnInit {
   pizzaSvc = inject(PizzaService);
   actRoute = inject(ActivatedRoute);
+  router = inject(Router);
   email: string = '';
   orders: PendingOrder[] = [];
 
@@ -31,6 +32,19 @@ export class OrdersComponent implements OnInit {
       .catch((err) => {
         console.log(err);
         alert('Email Does Not Exist');
+      });
+  }
+
+  selectDelivered(e: any) {
+    console.info('>>Selected:' + e.target.value);
+    firstValueFrom(this.pizzaSvc.delivered(e.target.value))
+      .then((resp) => {
+        alert('Order ' + e.target.value + ' marked as Delivered');
+        this.router.navigate(['/orders', this.email]);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Order ' + e.target.value + ' Not Found');
       });
   }
 }

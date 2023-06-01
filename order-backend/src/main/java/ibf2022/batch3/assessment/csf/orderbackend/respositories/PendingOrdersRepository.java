@@ -16,16 +16,21 @@ public class PendingOrdersRepository {
     @Qualifier("pending-orders")
     RedisTemplate<String, String> redisTemplate;
 
-    // TODO: Task 3
+    // Task 3
     // WARNING: Do not change the method's signature.
     public void add(PizzaOrder order) {
         String pendingOrderJsonStr = parsePendOrder(order);
         this.redisTemplate.opsForValue().set(order.getOrderId(), pendingOrderJsonStr);
     }
 
-    // TODO: Task 7
+    // Task 7
     // WARNING: Do not change the method's signature.
     public boolean delete(String orderId) {
+        if (this.redisTemplate.opsForValue().getAndDelete(orderId) != null) {
+            System.out.println(">>Redis Delivered");
+            return true;
+        }
+        System.out.println(">>Redis Not Found");
         return false;
     }
 

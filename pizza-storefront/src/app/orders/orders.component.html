@@ -3,7 +3,8 @@
 <div *ngFor="let order of orders;let i=index">
     <div>
         <p>{{order.date.getMonth()}} {{order.date.getDate()}},{{order.date.getFullYear()}}</p>
-        <p>{{order.orderId}} <button type="submit">Delivered</button></p>
+        <p>{{order.orderId}} <button type="submit" value="{{order.orderId}}"
+                (click)="selectDelivered($event)">Delivered</button></p>
         <p>{{order.total}}</p>
     </div>
 </div>
