@@ -10,14 +10,17 @@ export class PizzaService {
   // Do not change the method name
   http = inject(HttpClient);
   placeOrder(order: Order) {
-    console.info('Posting', order);
+    console.info('>>Posting Order:', order);
     return this.http.post<any>(uploadAPIURL + 'order', order);
   }
 
-  // TODO: Task 5
+  // TODO: Task 5 //should be Task 6
   // You may add any parameters and return any type from getOrders() method
   // Do not change the method name
-  getOrders() {}
+  getOrders(email: string) {
+    console.info('>>Getting Orders', email);
+    return this.http.get<any>(uploadAPIURL + 'orders/' + email);
+  }
 
   // TODO: Task 7
   // You may add any parameters and return any type from delivered() method

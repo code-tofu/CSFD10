@@ -12,13 +12,18 @@ import { PizzaService } from './pizza.service';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
-  { path: '/orders/:email', component: OrdersComponent },
+  { path: 'orders/:email', component: OrdersComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
 @NgModule({
   declarations: [AppComponent, MainComponent, OrdersComponent],
-  imports: [BrowserModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    RouterModule.forRoot(routes),
+    HttpClientModule,
+  ],
 
   providers: [PizzaService],
   bootstrap: [AppComponent],

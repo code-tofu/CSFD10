@@ -74,7 +74,7 @@ export class MainComponent {
   }
 
   order() {
-    // console.info('OrderForm:', this.orderForm.value);
+    console.info('>>OrderForm:', this.orderForm.value);
     let newOrder: Order = {
       name: this.orderForm.value.name,
       email: this.orderForm.value.email,
@@ -84,13 +84,14 @@ export class MainComponent {
       toppings: this.parseToppings(this.orderForm.value.toppings),
       crust: this.orderForm.value.base,
     };
-    // console.info('NewOrder:', newOrder);
+
+    console.info('>>NewOrder:', newOrder);
     firstValueFrom(this.pizzaSvc.placeOrder(newOrder))
       .then((resp) => {
         console.log(resp);
-        alert('Order Successful');
-        // this.orderForm.reset();
-        // navigate
+        alert('Order Successful' + JSON.stringify(resp));
+        this.orderForm.reset();
+        this.router.navigate(['/orders', newOrder.email]);
       })
       .catch((err) => {
         console.log(err);

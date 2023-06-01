@@ -29,7 +29,7 @@ public class OrderingService {
     @Value("${pricing.service.url}")
     private String pricingSvcURL;
 
-    // TODO: Task 5
+    // Task 5
     // WARNING: DO NOT CHANGE THE METHOD'S SIGNATURE
     public PizzaOrder placeOrder(PizzaOrder order) throws OrderException {
         RestTemplate restTemplate = new RestTemplate();

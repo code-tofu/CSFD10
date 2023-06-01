@@ -1,13 +1,25 @@
 package ibf2022.batch3.assessment.csf.orderbackend.respositories;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.redis.connection.zset.Aggregate;
 import org.springframework.stereotype.Repository;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
+import redis.clients.jedis.search.aggr.AggregationResult;
 
 @Repository
 public class OrdersRepository {
@@ -48,18 +60,38 @@ public class OrdersRepository {
         newDoc.append("crust", order.isThickCrust() ? "thick" : "thin");
         newDoc.append("toppings", order.getTopplings());
         System.out.println(">>Inserting:" + newDoc.toString());
-
         Document returnDoc = mongoTemplate.insert(newDoc, "orders");
-
     }
 
-    // TODO: Task 6
+    // Task 6
     // WARNING: Do not change the method's signature.
     // Write the native MongoDB query in the comment below
     // Native MongoDB query here for getPendingOrdersByEmail()
-    public List<PizzaOrder> getPendingOrdersByEmail(String email) {
+    // db.orders.aggregate(
+    // [{$match:{email: "benjamin.ftc@gmail.com"},},
+    // {$match:{delivered: {$exists: false},},},
+    // {$project:{orderId: 1,total: 1,date: 1,},},
+    // {$sort:{date: -1,},}]);
 
-        return null;
+    public List<PizzaOrder> getPendingOrdersByEmail(String email) {
+        MatchOperation matchEmail = Aggregation.match(Criteria.where("email").is(email));
+        MatchOperation matchDelivered = Aggregation.match(Criteria.where("delivered").exists(false));
+        ProjectionOperation projectFields = Aggregation.project("orderId", "total", "date");
+        SortOperation sortByDate = Aggregation.sort(Sort.Direction.DESC, "date");
+
+        Aggregation agg = Aggregation.newAggregation(matchEmail, matchDelivered, projectFields, sortByDate);
+        AggregationResults<Document> resultDocs = mongoTemplate.aggregate(agg, "orders", Document.class);
+
+        List<PizzaOrder> resultList = new ArrayList<>();
+        for (Document doc : resultDocs) {
+            PizzaOrder newOrder = new PizzaOrder();
+            newOrder.setOrderId(doc.get("_id").toString());
+            newOrder.setDate(doc.getDate("date"));
+            newOrder.setTotal(doc.getDouble("total").floatValue());
+            resultList.add(newOrder);
+        }
+        System.out.println(">>Aggregation Result:" + resultList);
+        return resultList;
     }
 
     // TODO: Task 7
