@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PizzaService } from '../pizza.service';
 import { firstValueFrom } from 'rxjs';
 import { Order } from '../order.model';
+import { Router } from '@angular/router';
 
 const SIZES: string[] = [
   'Personal - 6 inches',
@@ -32,6 +33,7 @@ export class MainComponent {
   constructor() {}
   fb = inject(FormBuilder);
   pizzaSvc = inject(PizzaService);
+  router = inject(Router);
 
   orderForm!: FormGroup;
   toppings!: FormGroup;
@@ -87,8 +89,8 @@ export class MainComponent {
       .then((resp) => {
         console.log(resp);
         alert('Order Successful');
-        this.orderForm.reset();
-        //navigate
+        // this.orderForm.reset();
+        // navigate
       })
       .catch((err) => {
         console.log(err);

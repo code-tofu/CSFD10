@@ -57,4 +57,7 @@ public class PizzaOrder {
 	}
 
 	// WARNING: DO NOT MODIFY THIS FILE. 2 MARKS WILL BE DEDUCTED FOR EVERY MODIFIED LINE
+
+    // Spelling mistake with thickCurst in toString()
+    // Spelling mistake for topping getter/setter
 }

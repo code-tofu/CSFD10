@@ -47,7 +47,7 @@ public class OrdersRepository {
         newDoc.append("comments", order.getComments());
         newDoc.append("crust", order.isThickCrust() ? "thick" : "thin");
         newDoc.append("toppings", order.getTopplings());
-        System.out.println("Inserting:" + newDoc.toString());
+        System.out.println(">>Inserting:" + newDoc.toString());
 
         Document returnDoc = mongoTemplate.insert(newDoc, "orders");
 

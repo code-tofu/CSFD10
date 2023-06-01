@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import ibf2022.batch3.assessment.csf.orderbackend.services.OrderException;
 import ibf2022.batch3.assessment.csf.orderbackend.services.OrderingService;
+import ibf2022.batch3.assessment.csf.orderbackend.utils.Utils;
 
 @Controller
 public class OrderController {
@@ -21,8 +23,13 @@ public class OrderController {
     @PostMapping(path = "api/order", consumes = "application/json")
     @ResponseBody
     public ResponseEntity<String> placeOrder(@RequestBody String orderJson) {
-        System.out.println("Recieved:" + orderJson);
-
+        System.out.println(">>Recieved:" + orderJson);
+        try {
+            orderSvc.placeOrder(Utils.createOrder(Utils.getJSONObj(orderJson)));
+        } catch (OrderException orderErr) {
+            System.out.println(orderErr);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(orderErr.toString());
+        }
         // TODO: CHANGE ME
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(orderJson.toString());
     }
